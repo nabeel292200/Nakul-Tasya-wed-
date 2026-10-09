@@ -23,6 +23,7 @@ export interface WeddingData {
     groomShort: string;
     groomFull: string;
     hashtag: string;
+    monogram?: string;
   };
   invite: {
     kicker: string;
@@ -83,6 +84,7 @@ export const weddingData: WeddingData = {
     groomShort: 'NAKUL',
     groomFull: 'Nakul Luthra',
     hashtag: '#NakulWedsTasya',
+    monogram: 'NATA',
   },
   invite: {
     kicker: 'Together with their families',
@@ -101,8 +103,8 @@ export const weddingData: WeddingData = {
   events: [
     {
       id: 'kirtan',
-      shortTitle: 'Kirtan & Birthday',
-      title: "Kirtan & Bhavika's 1st Birthday",
+      shortTitle: 'Kirtan',
+      title: 'Kirtan',
       dateLabel: '24 . 11 . 2026',
       dayLabel: 'Tuesday',
       timeLabel: '6:00 in the evening',
@@ -111,7 +113,7 @@ export const weddingData: WeddingData = {
       venueName: 'Haryana Maitri Bhawan',
       venueAddress: 'Crossing of Rd Number 42 & 43, Pitampura, Delhi 110034',
       dressCode: 'Traditional / Festive Attire',
-      note: 'Join us for devotional blessings and Bhavika’s 1st birthday celebrations',
+      note: 'Join us for devotional blessings',
       mapsQuery: 'Haryana Maitri Bhawan Pitampura Delhi 110034',
     },
     {
@@ -125,8 +127,8 @@ export const weddingData: WeddingData = {
       endsAt: '2026-11-28T23:30:00+05:30',
       venueName: 'Majestic Crown Banquet',
       venueAddress: '24, Najafgarh Rd, Block C, Najafgarh Road Industrial Area, New Delhi 110015',
-      dressCode: 'Festive Indian / Indo-Western',
-      note: 'Ring ceremony followed by celebratory dinner & music',
+      dressCode: 'Modern Evening Wear',
+      note: 'Celebratory dinner & music',
       mapsQuery: 'Majestic Crown Banquet Najafgarh Road New Delhi 110015',
     },
     {
@@ -188,7 +190,7 @@ export const weddingData: WeddingData = {
       year: '2024',
       title: 'The First Spark',
       text: 'A serendipitous encounter, endless conversations, and the beautiful discovery of kindred spirits.',
-      image: '/assets/tasya-nakul-moments.png',
+      image: '/assets/tasya-nakul-holding-hands.png',
     },
     {
       year: '2025',
@@ -209,10 +211,10 @@ export const weddingData: WeddingData = {
     source: 'A blessing from both families',
   },
   footer: {
-    families: 'With love & blessings from in loving remembrance of late Smt. Raj Luthra & late Shri Inderjeet Luthra and Smt. Dimple & Shri Nitin Luthra',
+    families: 'With love & blessings from in loving remembrance of late Smt. Raj Luthra & late Shri Inderjeet Luthra',
     contacts: [
+      { name: 'Pranav Luthra', phone: '+919582883992' },
       { name: 'Nakul Luthra', phone: '+919999343069' },
-      { name: 'Nitin Luthra', phone: '+919582883992' },
     ],
   },
   meta: {

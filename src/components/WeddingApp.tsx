@@ -124,11 +124,9 @@ function GateOverlay({ opened, onOpen }: { opened: boolean; onOpen: () => void }
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.4, delay: 0.5 }}
-            className="relative font-display text-4xl tracking-[0.08em] text-[var(--parchment,#F4F0E6)]"
+            className="relative font-display text-3xl tracking-[0.2em] pl-[0.2em] text-[var(--parchment,#F4F0E6)] uppercase"
           >
-            {couple.groomShort[0]}
-            <span className="mx-1 text-[var(--gold,#C5A869)]">&</span>
-            {couple.brideShort[0]}
+            {couple.monogram || 'NATA'}
           </motion.span>
         </div>
 
@@ -475,7 +473,7 @@ function generateCalendarLink(ev: EventItem | typeof weddingData.event) {
 // 7. Event Section (cv in reference)
 function EventSection() {
   const { event, events } = weddingData;
-  const [activeIndex, setActiveIndex] = useState(events && events.length > 0 ? events.length - 1 : 0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const currentEvent = events && events.length > 0 ? events[activeIndex] : event;
   const currentVenueName = 'venueName' in currentEvent ? currentEvent.venueName : weddingData.venue.name;
   const currentVenueAddress = 'venueAddress' in currentEvent ? currentEvent.venueAddress : weddingData.venue.address;
@@ -643,9 +641,10 @@ function VenueSection() {
 
 // 9. Moments Gallery Section (fv in reference)
 const MOMENTS_LIST = [
-  { src: '/assets/tasya-nakul-portrait.png', alt: 'Tasya & Nakul' },
-  { src: '/assets/tasya-nakul-moments.png', alt: 'Cherished Moments with Tasya & Nakul' },
+  { src: '/assets/tasya-nakul-holding-hands.png', alt: 'Cherished Moments with Tasya & Nakul' },
   { src: '/assets/tasya-nakul-night.png', alt: 'Together in Love' },
+  { src: '/assets/tasya-nakul-portrait.png', alt: 'Tasya & Nakul' },
+  { src: '/assets/tasya-nakul-moments.png', alt: 'Joyful Moments with Tasya & Nakul' },
 ];
 
 function MomentsSection() {
