@@ -460,7 +460,8 @@ function generateCalendarLink(ev: EventItem | typeof weddingData.event) {
   const end = new Date(ev.endsAt).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const venueName = 'venueName' in ev ? ev.venueName : venue.name;
   const venueAddress = 'venueAddress' in ev ? ev.venueAddress : venue.address;
-  const details = `${invite.kicker} — ${invite.line}\n\nEvent: ${ev.title}\nVenue: ${venueName}, ${venueAddress}\nDress code: ${ev.dressCode || ''}\nNote: ${ev.note || ''}`;
+  const mapLine = 'mapsUrl' in ev && ev.mapsUrl ? `\nLocation: ${ev.mapsUrl}` : '';
+  const details = `${invite.kicker} — ${invite.line}\n\nEvent: ${ev.title}\nVenue: ${venueName}, ${venueAddress}${mapLine}\nDress code: ${ev.dressCode || ''}\nNote: ${ev.note || ''}`;
   return `https://calendar.google.com/calendar/render?${new URLSearchParams({
     action: 'TEMPLATE',
     text: ev.title,
@@ -478,6 +479,10 @@ function EventSection() {
   const currentVenueName = 'venueName' in currentEvent ? currentEvent.venueName : weddingData.venue.name;
   const currentVenueAddress = 'venueAddress' in currentEvent ? currentEvent.venueAddress : weddingData.venue.address;
   const currentMapsQuery = 'mapsQuery' in currentEvent ? currentEvent.mapsQuery : weddingData.venue.mapsQuery;
+  const currentMapsUrl =
+    'mapsUrl' in currentEvent && currentEvent.mapsUrl
+      ? currentEvent.mapsUrl
+      : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(currentMapsQuery)}`;
 
   return (
     <section className="relative overflow-hidden px-5 py-20 bg-[var(--parchment,#F4F0E6)]">
@@ -501,10 +506,11 @@ function EventSection() {
                 key={ev.id}
                 type="button"
                 onClick={() => setActiveIndex(idx)}
-                className={`rounded-full px-3.5 py-1.5 text-[0.6rem] tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer ${activeIndex === idx
+                className={`rounded-full px-3.5 py-1.5 text-[0.6rem] tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer ${
+                  activeIndex === idx
                     ? 'bg-[var(--pine,#354234)] text-[var(--gold,#C5A869)] shadow-sm border border-[var(--gold,#C5A869)]/70 font-semibold scale-105'
                     : 'bg-[var(--parchment,#F4F0E6)]/80 text-[var(--ink,#30362F)]/70 border border-[var(--gold,#C5A869)]/30 hover:border-[var(--gold,#C5A869)]/60'
-                  }`}
+                }`}
               >
                 {ev.shortTitle}
               </button>
@@ -537,11 +543,16 @@ function EventSection() {
               </li>
               <li className="flex items-center justify-center gap-2">
                 <MapPin className="h-4 w-4 text-[var(--gold,#C5A869)] shrink-0" aria-hidden="true" />
-                <span>
-                  {currentVenueName}
+                <a
+                  href={currentMapsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="transition-colors hover:text-[var(--gold,#C5A869)]"
+                >
+                  <span className="font-medium">{currentVenueName}</span>
                   <br />
                   <span className="text-[var(--ink,#30362F)]/60">{currentVenueAddress}</span>
-                </span>
+                </a>
               </li>
               {currentEvent.dressCode && (
                 <li className="flex items-center justify-center gap-2">
@@ -568,7 +579,7 @@ function EventSection() {
                 <span>Add to calendar</span>
               </a>
               <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(currentMapsQuery)}`}
+                href={currentMapsUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-full border border-[var(--gold,#C5A869)]/60 py-3 text-[0.65rem] tracking-[0.2em] text-[var(--ink,#30362F)]/75 uppercase transition-colors hover:bg-[var(--gold,#C5A869)]/10"
@@ -635,7 +646,6 @@ function VenueSection() {
         </a>
       </ScrollReveal>
     </section>
-
   );
 }
 
@@ -644,7 +654,6 @@ const MOMENTS_LIST = [
   { src: '/assets/tasya-nakul-holding-hands.png', alt: 'Cherished Moments with Tasya & Nakul' },
   { src: '/assets/tasya-nakul-night.png', alt: 'Together in Love' },
   { src: '/assets/tasya-nakul-portrait.png', alt: 'Tasya & Nakul' },
-  { src: '/assets/tasya-nakul-moments.png', alt: 'Joyful Moments with Tasya & Nakul' },
 ];
 
 function MomentsSection() {

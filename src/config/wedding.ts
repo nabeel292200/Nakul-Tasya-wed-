@@ -12,6 +12,7 @@ export interface EventItem {
   dressCode?: string;
   note?: string;
   mapsQuery: string;
+  mapsUrl?: string;
 }
 
 export interface WeddingData {
@@ -159,7 +160,9 @@ export const weddingData: WeddingData = {
       venueAddress: 'A-56, Saraswati Vihar, Pitampura, Delhi',
       dressCode: 'Shades of Yellow & Sunshine',
       note: 'A joyous morning filled with turmeric, flowers, laughter, and lunch',
-      mapsQuery: 'A56 Saraswati Vihar Pitampura Delhi',
+      mapsQuery: '28.6967545,77.1195526',
+      mapsUrl:
+        "https://www.google.com/maps/place/28%C2%B041'48.3%22N+77%C2%B007'10.4%22E/@28.6967545,77.1169777,17z/data=!3m1!4b1!4m4!3m3!8m2!3d28.6967545!4d77.1195526?hl=en&entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D",
     },
     {
       id: 'wedding',
