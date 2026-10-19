@@ -54,6 +54,7 @@ export interface WeddingData {
     title: string;
     text: string;
     image: string;
+    imagePosition?: string;
   }>;
   blessing: {
     line: string;
@@ -194,18 +195,21 @@ export const weddingData: WeddingData = {
       title: 'The First Spark',
       text: 'A serendipitous encounter, endless conversations, and the beautiful discovery of kindred spirits.',
       image: '/assets/tasya-nakul-holding-hands.png',
+      imagePosition: 'center center',
     },
     {
       year: '2025',
       title: 'Growing Together',
       text: 'Sharing adventures, mutual laughter, and finding warmth and home in each other’s presence.',
       image: '/assets/tasya-nakul-night.png',
+      imagePosition: 'center 15%',
     },
     {
       year: '2026',
       title: 'The Eternal Bond',
       text: 'Surrounded by our families and loved ones, stepping hand-in-hand into our forever together.',
       image: '/assets/tasya-nakul-portrait.png',
+      imagePosition: 'center 18%',
     },
   ],
   blessing: {

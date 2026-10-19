@@ -428,7 +428,8 @@ function OurStorySection() {
                         loading="lazy"
                         width={1024}
                         height={1024}
-                        className="h-48 w-full object-cover transition-transform duration-[1.4s] ease-out hover:scale-105 sm:h-56"
+                        style={{ objectPosition: item.imagePosition || 'center center' }}
+                        className="h-64 w-full object-cover transition-transform duration-[1.4s] ease-out hover:scale-105 sm:h-72"
                       />
                     </div>
                   </div>
@@ -651,9 +652,9 @@ function VenueSection() {
 
 // 9. Moments Gallery Section (fv in reference)
 const MOMENTS_LIST = [
-  { src: '/assets/tasya-nakul-holding-hands.png', alt: 'Cherished Moments with Tasya & Nakul' },
-  { src: '/assets/tasya-nakul-night.png', alt: 'Together in Love' },
-  { src: '/assets/tasya-nakul-portrait.png', alt: 'Tasya & Nakul' },
+  { src: '/assets/tasya-nakul-holding-hands.png', alt: 'Cherished Moments with Tasya & Nakul', position: 'center center' },
+  { src: '/assets/tasya-nakul-night.png', alt: 'Together in Love', position: 'center 12%' },
+  { src: '/assets/tasya-nakul-portrait.png', alt: 'Tasya & Nakul', position: 'center 15%' },
 ];
 
 function MomentsSection() {
@@ -683,6 +684,7 @@ function MomentsSection() {
               loading="lazy"
               width={1024}
               height={1024}
+              style={{ objectPosition: item.position || 'center center' }}
               className="h-72 w-full object-cover"
             />
             <span className="pointer-events-none absolute inset-2 rounded-t-[2.7rem] border border-[var(--parchment,#F4F0E6)]/40" />
