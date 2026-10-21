@@ -106,7 +106,7 @@ export const weddingData: WeddingData = {
     {
       id: 'kirtan',
       shortTitle: 'Kirtan',
-      title: 'Kirtan',
+      title: 'Kirtan Ceremony',
       dateLabel: '24 . 11 . 2026',
       dayLabel: 'Tuesday',
       timeLabel: '6:00 in the evening',
@@ -117,6 +117,7 @@ export const weddingData: WeddingData = {
       dressCode: 'Traditional / Festive Attire',
       note: 'Join us for devotional blessings',
       mapsQuery: 'Haryana Maitri Bhawan Pitampura Delhi 110034',
+      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Haryana+Maitri+Bhawan+Pitampura+Delhi+110034',
     },
     {
       id: 'sagan',
@@ -132,11 +133,12 @@ export const weddingData: WeddingData = {
       dressCode: 'Modern Evening Wear',
       note: 'Celebratory dinner & music',
       mapsQuery: 'Majestic Crown Banquet Najafgarh Road New Delhi 110015',
+      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Majestic+Crown+Banquet+Najafgarh+Road+New+Delhi+110015',
     },
     {
       id: 'mehndi',
-      shortTitle: 'Mehndi & Sufi',
-      title: 'Mehndi Raat / Sufi Night',
+      shortTitle: 'Mehndi & Sufi Night',
+      title: 'Mehndi Raat & Sufi Night',
       dateLabel: '30 . 11 . 2026',
       dayLabel: 'Monday',
       timeLabel: '7:00 in the evening',
@@ -147,6 +149,7 @@ export const weddingData: WeddingData = {
       dressCode: 'Ethnic Glam / Festive Shimmer',
       note: 'An enchanted evening of soul-stirring Sufi music, henna, and dinner',
       mapsQuery: 'Sky Mansion by Tikka Junction Kirti Nagar New Delhi 110015',
+      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Sky+Mansion+by+Tikka+Junction+Kirti+Nagar+New+Delhi+110015',
     },
     {
       id: 'haldi',
@@ -167,7 +170,7 @@ export const weddingData: WeddingData = {
     },
     {
       id: 'wedding',
-      shortTitle: 'The Wedding',
+      shortTitle: 'Wedding',
       title: 'The Wedding (Vivah)',
       dateLabel: '02 . 12 . 2026',
       dayLabel: 'Wednesday',
@@ -179,6 +182,7 @@ export const weddingData: WeddingData = {
       dressCode: 'Royal Indian Traditional',
       note: 'Sehra Bandi at A-56 Saraswati Vihar (5 PM), followed by Barat meeting point & wedding at The Gracious Banquets (7 PM)',
       mapsQuery: 'The Gracious Banquets Naraina Industrial Area Phase 2 Delhi 110028',
+      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=The+Gracious+Banquets+Naraina+Industrial+Area+Phase+2+Delhi+110028',
     },
   ],
   venue: {

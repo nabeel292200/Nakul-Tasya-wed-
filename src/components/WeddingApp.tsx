@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useInView, useSpring } from 'framer-motion';
-import { CalendarPlus, Clock, Instagram, MapPin, Navigation, Phone, Shirt, X } from 'lucide-react';
+import { CalendarPlus, Check, Clock, Copy, Instagram, MapPin, Navigation, Phone, Shirt, X } from 'lucide-react';
 import { weddingData, EventItem } from '@/config/wedding';
 
 // Gate Context
@@ -473,9 +473,14 @@ function generateCalendarLink(ev: EventItem | typeof weddingData.event) {
 }
 
 // 7. Event Section (cv in reference)
-function EventSection() {
+function EventSection({
+  activeIndex,
+  onSelectEvent,
+}: {
+  activeIndex: number;
+  onSelectEvent: (index: number) => void;
+}) {
   const { event, events } = weddingData;
-  const [activeIndex, setActiveIndex] = useState(0);
   const currentEvent = events && events.length > 0 ? events[activeIndex] : event;
   const currentVenueName = 'venueName' in currentEvent ? currentEvent.venueName : weddingData.venue.name;
   const currentVenueAddress = 'venueAddress' in currentEvent ? currentEvent.venueAddress : weddingData.venue.address;
@@ -483,7 +488,8 @@ function EventSection() {
   const currentMapsUrl =
     'mapsUrl' in currentEvent && currentEvent.mapsUrl
       ? currentEvent.mapsUrl
-      : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(currentMapsQuery)}`;
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(currentMapsQuery)}`;
+  const currentDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(currentMapsQuery)}`;
 
   return (
     <section className="relative overflow-hidden px-5 py-20 bg-[var(--parchment,#F4F0E6)]">
@@ -498,46 +504,69 @@ function EventSection() {
       />
       <div aria-hidden="true" className="absolute inset-0 bg-[var(--parchment,#F4F0E6)]/70 pointer-events-none" />
 
-      <ScrollReveal className="relative mx-auto max-w-lg">
+      <ScrollReveal className="relative mx-auto max-w-xl">
+        {/* Section Header */}
+        <div className="mb-6 text-center">
+          <p className="text-[0.68rem] sm:text-xs font-semibold tracking-[0.38em] text-[var(--gold,#C5A869)] uppercase">
+            Wedding Festivities
+          </p>
+          <h2 className="mt-1 font-display text-2xl sm:text-3xl tracking-[0.14em] text-[var(--pine,#354234)] uppercase">
+            Ceremonies &amp; Schedule
+          </h2>
+          <div className="mx-auto mt-3 w-20 gold-rule" />
+        </div>
+
         {/* Event Selector Tabs */}
         {events && events.length > 1 && (
-          <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
-            {events.map((ev, idx) => (
-              <button
-                key={ev.id}
-                type="button"
-                onClick={() => setActiveIndex(idx)}
-                className={`rounded-full px-3.5 py-1.5 text-[0.6rem] tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer ${
-                  activeIndex === idx
-                    ? 'bg-[var(--pine,#354234)] text-[var(--gold,#C5A869)] shadow-sm border border-[var(--gold,#C5A869)]/70 font-semibold scale-105'
-                    : 'bg-[var(--parchment,#F4F0E6)]/80 text-[var(--ink,#30362F)]/70 border border-[var(--gold,#C5A869)]/30 hover:border-[var(--gold,#C5A869)]/60'
-                }`}
-              >
-                {ev.shortTitle}
-              </button>
-            ))}
+          <div className="mb-8 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+            {events.map((ev, idx) => {
+              const isSelected = activeIndex === idx;
+              return (
+                <button
+                  key={ev.id}
+                  type="button"
+                  onClick={() => onSelectEvent(idx)}
+                  className={`rounded-full px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm tracking-[0.14em] uppercase font-semibold transition-all duration-300 cursor-pointer ${
+                    isSelected
+                      ? 'bg-[var(--pine,#354234)] text-[var(--gold,#C5A869)] shadow-md border-2 border-[var(--gold,#C5A869)] ring-2 ring-[var(--gold,#C5A869)]/20 scale-105'
+                      : 'bg-[var(--parchment,#F4F0E6)]/90 text-[var(--ink,#30362F)] font-medium border border-[var(--gold,#C5A869)]/40 hover:border-[var(--gold,#C5A869)] hover:bg-[var(--parchment-deep,#EDE6D6)]'
+                  }`}
+                >
+                  {ev.shortTitle}
+                </button>
+              );
+            })}
           </div>
         )}
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentEvent.title}
+            key={'id' in currentEvent ? currentEvent.id : currentEvent.title}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.28 }}
-            className="relative rounded-t-[9rem] border border-[var(--gold,#C5A869)]/50 bg-[var(--parchment,#F4F0E6)] px-7 pt-16 pb-10 text-center shadow-[0_30px_60px_-45px_var(--color-ink)] paper-grain"
+            className="relative rounded-t-[9rem] border border-[var(--gold,#C5A869)]/50 bg-[var(--parchment,#F4F0E6)] px-6 sm:px-8 pt-14 pb-10 text-center shadow-[0_30px_60px_-45px_var(--color-ink)] paper-grain"
           >
             <div className="pointer-events-none absolute inset-x-3 top-3 bottom-3 rounded-t-[8.4rem] border border-[var(--gold,#C5A869)]/30" />
-            <p className="text-[0.62rem] tracking-[0.4em] text-[var(--ink,#30362F)]/60 uppercase">
-              {currentEvent.title}
+
+            {/* Event Category Tag */}
+            <p className="text-[0.65rem] sm:text-xs font-semibold tracking-[0.35em] text-[var(--gold,#C5A869)] uppercase">
+              Ceremony &amp; Celebration
             </p>
-            <p className="mt-4 font-display text-4xl tracking-[0.12em] text-[var(--gold,#C5A869)]">
+
+            {/* Event Name - Large, prominent, clear */}
+            <h3 className="mt-1 font-display text-2xl sm:text-3xl md:text-4xl tracking-[0.06em] text-[var(--pine,#354234)] font-medium leading-tight uppercase">
+              {currentEvent.title}
+            </h3>
+
+            {/* Date */}
+            <p className="mt-3 font-display text-3xl sm:text-4xl tracking-[0.12em] text-[var(--gold,#C5A869)]">
               {currentEvent.dateLabel}
             </p>
-            <div className="mx-auto mt-5 w-28 gold-rule" />
+            <div className="mx-auto mt-4 w-28 gold-rule" />
 
-            <ul className="mt-7 space-y-4 text-sm text-[var(--ink,#30362F)]/80">
+            <ul className="mt-7 space-y-4 text-sm sm:text-base text-[var(--ink,#30362F)]/85">
               <li className="flex items-center justify-center gap-2">
                 <Clock className="h-4 w-4 text-[var(--gold,#C5A869)] shrink-0" aria-hidden="true" />
                 <span>{currentEvent.dayLabel}, {currentEvent.timeLabel}</span>
@@ -550,9 +579,9 @@ function EventSection() {
                   rel="noreferrer"
                   className="transition-colors hover:text-[var(--gold,#C5A869)]"
                 >
-                  <span className="font-medium">{currentVenueName}</span>
+                  <span className="font-semibold">{currentVenueName}</span>
                   <br />
-                  <span className="text-[var(--ink,#30362F)]/60">{currentVenueAddress}</span>
+                  <span className="text-xs sm:text-sm text-[var(--ink,#30362F)]/65">{currentVenueAddress}</span>
                 </a>
               </li>
               {currentEvent.dressCode && (
@@ -564,28 +593,29 @@ function EventSection() {
             </ul>
 
             {currentEvent.note && (
-              <p className="mt-6 font-display text-lg italic text-[var(--ink,#30362F)]/65">
+              <p className="mt-6 font-display text-base sm:text-lg italic text-[var(--ink,#30362F)]/70">
                 {currentEvent.note}
               </p>
             )}
 
-            <div className="mt-8 flex flex-col gap-3">
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
                 href={generateCalendarLink(currentEvent)}
                 target="_blank"
                 rel="noreferrer"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-[var(--pine,#354234)] px-6 py-3.5 text-[0.7rem] tracking-[0.24em] text-[var(--parchment,#F4F0E6)] uppercase transition-transform duration-200 active:scale-95"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[var(--pine,#354234)] px-6 py-3.5 text-[0.7rem] sm:text-xs tracking-[0.24em] font-medium text-[var(--parchment,#F4F0E6)] uppercase transition-transform duration-200 active:scale-95 hover:bg-[var(--pine,#354234)]/90"
               >
                 <CalendarPlus className="h-4 w-4 transition-transform group-hover:rotate-6 text-[var(--gold,#C5A869)]" />
                 <span>Add to calendar</span>
               </a>
               <a
-                href={currentMapsUrl}
+                href={currentDirectionsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-[var(--gold,#C5A869)]/60 py-3 text-[0.65rem] tracking-[0.2em] text-[var(--ink,#30362F)]/75 uppercase transition-colors hover:bg-[var(--gold,#C5A869)]/10"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-[var(--gold,#C5A869)]/70 px-6 py-3 text-[0.7rem] sm:text-xs tracking-[0.2em] font-medium text-[var(--ink,#30362F)]/80 uppercase transition-colors hover:bg-[var(--gold,#C5A869)]/15 active:scale-95"
               >
-                Directions
+                <Navigation className="h-3.5 w-3.5 text-[var(--gold,#C5A869)]" aria-hidden="true" />
+                <span>Get directions</span>
               </a>
             </div>
           </motion.div>
@@ -596,55 +626,212 @@ function EventSection() {
 }
 
 // 8. Venue Section (uv in reference)
-function VenueSection() {
-  const { venue } = weddingData;
+function VenueSection({
+  activeIndex,
+  onSelectEvent,
+}: {
+  activeIndex: number;
+  onSelectEvent: (index: number) => void;
+}) {
+  const { events, venue } = weddingData;
+  const [mapMode, setMapMode] = useState<'embed' | 'artistic'>('embed');
+  const [copied, setCopied] = useState(false);
+
+  const currentEvent = events && events.length > 0 ? events[activeIndex] : null;
+  const currentVenueName = currentEvent ? currentEvent.venueName : venue.name;
+  const currentVenueAddress = currentEvent ? currentEvent.venueAddress : venue.address;
+  const currentMapsQuery = currentEvent ? currentEvent.mapsQuery : venue.mapsQuery;
+  const currentMapsUrl =
+    currentEvent && currentEvent.mapsUrl
+      ? currentEvent.mapsUrl
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(currentMapsQuery)}`;
+  const currentDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(currentMapsQuery)}`;
+
+  // Clear specific heading based on active event:
+  // e.g. "Wedding Venue & Directions", "Sagan Venue & Directions", "Kirtan Venue & Directions", etc.
+  const sectionTitle = currentEvent
+    ? (currentEvent.id === 'wedding'
+        ? 'Wedding Venue & Directions'
+        : `${currentEvent.shortTitle} Venue & Directions`)
+    : 'Wedding Venue & Directions';
+
+  const handleCopy = () => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(`${currentVenueName}, ${currentVenueAddress}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2200);
+    }
+  };
 
   return (
-    <section className="px-5 py-16 bg-[var(--parchment,#F4F0E6)]">
-      <ScrollReveal className="mx-auto max-w-lg text-center">
-        <h2 className="font-display text-3xl tracking-[0.14em] text-[var(--pine,#354234)] uppercase">
-          The Venue
+    <section className="px-5 py-20 bg-[var(--parchment,#F4F0E6)]">
+      <ScrollReveal className="mx-auto max-w-xl text-center">
+        {/* Eyebrow and Dynamic Heading */}
+        <p className="text-[0.68rem] sm:text-xs font-semibold tracking-[0.38em] text-[var(--gold,#C5A869)] uppercase">
+          Location &amp; Navigation
+        </p>
+        <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl tracking-[0.08em] text-[var(--pine,#354234)] uppercase font-normal">
+          {sectionTitle}
         </h2>
         <div className="mx-auto mt-4 w-24 gold-rule" />
 
-        <a
-          href={venue.url}
-          target="_blank"
-          rel="noreferrer"
-          className="group mt-8 block overflow-hidden rounded-t-[3rem] border border-[var(--gold,#C5A869)]/50 shadow-[0_24px_50px_-40px_var(--color-ink)]"
-        >
-          <div className="relative">
-            <img
-              src="/assets/map-preview.jpg"
-              alt={`Illustrated map showing the location of ${venue.name}`}
-              loading="lazy"
-              width={1200}
-              height={800}
-              className="h-56 w-full object-cover transition-transform duration-[1.6s] ease-out group-hover:scale-105 sm:h-64"
-            />
-            <span className="absolute inset-0 bg-[var(--pine,#354234)]/0 transition-colors group-hover:bg-[var(--pine,#354234)]/10" />
-            <span className="absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-[var(--parchment,#F4F0E6)]/90 px-4 py-2 text-[0.6rem] tracking-[0.24em] text-[var(--ink,#30362F)]/80 uppercase">
-              <Navigation className="h-3.5 w-3.5 text-[var(--gold,#C5A869)]" aria-hidden="true" />
-              Open in maps
-            </span>
+        {/* Event Selector for Venue */}
+        {events && events.length > 1 && (
+          <div className="mt-6 mb-7 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+            {events.map((ev, idx) => {
+              const isSelected = activeIndex === idx;
+              return (
+                <button
+                  key={ev.id}
+                  type="button"
+                  onClick={() => onSelectEvent(idx)}
+                  className={`rounded-full px-3.5 py-1.5 sm:px-4 sm:py-2 text-[0.68rem] sm:text-xs tracking-[0.14em] uppercase font-semibold transition-all duration-300 cursor-pointer ${
+                    isSelected
+                      ? 'bg-[var(--pine,#354234)] text-[var(--gold,#C5A869)] shadow-sm border border-[var(--gold,#C5A869)] ring-1 ring-[var(--gold,#C5A869)]/30 scale-105'
+                      : 'bg-[var(--parchment,#F4F0E6)]/90 text-[var(--ink,#30362F)]/75 border border-[var(--gold,#C5A869)]/30 hover:border-[var(--gold,#C5A869)]/60'
+                  }`}
+                >
+                  {ev.shortTitle}
+                </button>
+              );
+            })}
           </div>
-        </a>
+        )}
 
-        <h3 className="mt-7 font-display text-2xl text-[var(--pine,#354234)]">
-          {venue.name}
-        </h3>
-        <p className="mt-2 text-sm text-[var(--ink,#30362F)]/70">
-          {venue.address}
-        </p>
+        {/* Dynamic Venue Card with animated transition */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentEvent ? currentEvent.id : 'venue'}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Map Frame */}
+            <div className="relative overflow-hidden rounded-t-[3rem] border border-[var(--gold,#C5A869)]/50 shadow-[0_24px_50px_-40px_var(--color-ink)] bg-[var(--parchment-deep,#EDE6D6)]">
+              {/* Map mode toggle tabs */}
+              <div className="absolute top-3 right-3 z-20 flex items-center rounded-full bg-[var(--parchment,#F4F0E6)]/90 p-0.5 shadow-sm border border-[var(--gold,#C5A869)]/40 backdrop-blur-sm">
+                <button
+                  type="button"
+                  onClick={() => setMapMode('embed')}
+                  className={`rounded-full px-2.5 py-1 text-[0.6rem] sm:text-[0.65rem] tracking-[0.12em] uppercase font-medium transition-colors cursor-pointer ${
+                    mapMode === 'embed'
+                      ? 'bg-[var(--pine,#354234)] text-[var(--gold,#C5A869)] font-semibold'
+                      : 'text-[var(--ink,#30362F)]/70 hover:text-[var(--ink,#30362F)]'
+                  }`}
+                >
+                  Live Map
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMapMode('artistic')}
+                  className={`rounded-full px-2.5 py-1 text-[0.6rem] sm:text-[0.65rem] tracking-[0.12em] uppercase font-medium transition-colors cursor-pointer ${
+                    mapMode === 'artistic'
+                      ? 'bg-[var(--pine,#354234)] text-[var(--gold,#C5A869)] font-semibold'
+                      : 'text-[var(--ink,#30362F)]/70 hover:text-[var(--ink,#30362F)]'
+                  }`}
+                >
+                  Artistic
+                </button>
+              </div>
 
-        <a
-          href={`https://www.google.com/maps/dir/?api=1&destination=${venue.lat},${venue.lng}`}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-6 inline-flex items-center gap-2 rounded-full border border-[var(--gold,#C5A869)]/60 px-6 py-3 text-[0.65rem] tracking-[0.24em] text-[var(--ink,#30362F)]/80 uppercase transition-colors hover:bg-[var(--gold,#C5A869)]/10 active:scale-95"
-        >
-          Get directions
-        </a>
+              {/* Map Content */}
+              {mapMode === 'embed' ? (
+                <div className="relative h-64 sm:h-72 w-full">
+                  <iframe
+                    title={`Google Map showing ${currentVenueName}`}
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(currentMapsQuery)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                    className="h-full w-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                  {/* Subtle top gradient shadow */}
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-black/20 to-transparent" />
+                </div>
+              ) : (
+                <a
+                  href={currentMapsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group block relative h-64 sm:h-72 w-full overflow-hidden"
+                >
+                  <img
+                    src="/assets/map-preview.jpg"
+                    alt={`Illustrated map showing the location of ${currentVenueName}`}
+                    loading="lazy"
+                    width={1200}
+                    height={800}
+                    className="h-full w-full object-cover transition-transform duration-[1.6s] ease-out group-hover:scale-105"
+                  />
+                  <span className="absolute inset-0 bg-[var(--pine,#354234)]/0 transition-colors group-hover:bg-[var(--pine,#354234)]/10" />
+                </a>
+              )}
+
+              {/* Floating "Open in Google Maps" pill on map */}
+              <a
+                href={currentMapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-[var(--parchment,#F4F0E6)]/95 backdrop-blur-sm px-4 py-1.5 text-[0.62rem] sm:text-[0.68rem] tracking-[0.2em] font-semibold text-[var(--ink,#30362F)] uppercase shadow-md border border-[var(--gold,#C5A869)]/60 hover:bg-[var(--pine,#354234)] hover:text-[var(--gold,#C5A869)] transition-colors z-20"
+              >
+                <Navigation className="h-3 w-3 text-[var(--gold,#C5A869)]" aria-hidden="true" />
+                <span>Open in Google Maps</span>
+              </a>
+            </div>
+
+            {/* Venue Details */}
+            <h3 className="mt-7 font-display text-2xl sm:text-3xl text-[var(--pine,#354234)] font-medium">
+              {currentVenueName}
+            </h3>
+
+            {currentEvent && (
+              <p className="mt-1 text-[0.7rem] sm:text-xs font-semibold tracking-[0.25em] text-[var(--gold,#C5A869)] uppercase">
+                {currentEvent.title} • {currentEvent.dateLabel}
+              </p>
+            )}
+
+            <p className="mt-3 text-sm sm:text-base text-[var(--ink,#30362F)]/75 max-w-md mx-auto leading-relaxed">
+              {currentVenueAddress}
+            </p>
+
+            {currentEvent?.note && (
+              <p className="mt-3 font-display text-sm sm:text-base italic text-[var(--ink,#30362F)]/65 max-w-md mx-auto">
+                {currentEvent.note}
+              </p>
+            )}
+
+            {/* Action Buttons */}
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+              <a
+                href={currentDirectionsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--pine,#354234)] px-6 py-3 text-[0.7rem] sm:text-xs tracking-[0.22em] font-medium text-[var(--parchment,#F4F0E6)] uppercase transition-all hover:bg-[var(--pine,#354234)]/90 active:scale-95 shadow-sm"
+              >
+                <Navigation className="h-3.5 w-3.5 text-[var(--gold,#C5A869)]" aria-hidden="true" />
+                <span>Get directions</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="inline-flex items-center gap-2 rounded-full border border-[var(--gold,#C5A869)]/60 px-5 py-3 text-[0.7rem] sm:text-xs tracking-[0.2em] font-medium text-[var(--ink,#30362F)]/80 uppercase transition-colors hover:bg-[var(--gold,#C5A869)]/10 active:scale-95 cursor-pointer"
+              >
+                {copied ? (
+                  <>
+                    <Check className="h-3.5 w-3.5 text-[var(--pine,#354234)]" aria-hidden="true" />
+                    <span>Address Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3.5 w-3.5 text-[var(--gold,#C5A869)]" aria-hidden="true" />
+                    <span>Copy Address</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </ScrollReveal>
     </section>
   );
@@ -814,6 +1001,7 @@ function FooterSection() {
 export default function WeddingApp() {
   const [opened, setOpened] = useState(false);
   const [removed, setRemoved] = useState(false);
+  const [activeEventIndex, setActiveEventIndex] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -856,10 +1044,10 @@ export default function WeddingApp() {
         <OurStorySection />
 
         {/* The Event */}
-        <EventSection />
+        <EventSection activeIndex={activeEventIndex} onSelectEvent={setActiveEventIndex} />
 
         {/* The Venue */}
-        <VenueSection />
+        <VenueSection activeIndex={activeEventIndex} onSelectEvent={setActiveEventIndex} />
 
         {/* Moments Gallery */}
         <MomentsSection />
